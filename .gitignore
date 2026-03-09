@@ -1,0 +1,53 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Poetry local configuration file
+poetry.toml
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Flet specific
+assets/
+!.keep
+*.apk
+*.aab
+*.exe
+*.dmg
+*.pkg
+*.app
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Tools caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ruff_history/
+coverage.xml
+*.cover
+.coverage
+htmlcov/
