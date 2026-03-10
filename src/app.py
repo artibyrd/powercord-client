@@ -40,37 +40,38 @@ async def main(page: ft.Page):
     async def route_change(route_event):
         try:
             page.views.clear()
-    
+
             # Determine if we have a valid session token
             import warnings
+
             with warnings.catch_warnings():
-                warnings.simplefilter('ignore')
+                warnings.simplefilter("ignore")
                 saved_token = await page.shared_preferences.get("api_key")
                 saved_url = await page.shared_preferences.get("base_url")
             if saved_url and saved_token and not api.base_url:
                 api.configure(saved_url, saved_token)
-    
+
             # Basic Auth Guard
             if not saved_token and page.route != "/login":
                 await page.push_route("/login")
                 return
-    
+
             # Handle dynamic routes (like /server/12345)
             # Check exact matches first
             route_handler = views.get(page.route)
-    
+
             if not route_handler:
                 if page.route.startswith("/server/"):
                     from src.views.server import view_server
-    
+
                     guild_id = page.route.split("/")[-1]
-    
+
                     def server_handler(p):
                         return view_server(p, guild_id)
-    
+
                     # Inject a lazy evaluator
                     route_handler = server_handler
-    
+
             if route_handler:
                 page.views.append(route_handler(page))
             else:
@@ -82,7 +83,7 @@ async def main(page: ft.Page):
                         page.views.append(ft.View("/", [ft.Text("Dashboard Placeholder")]))
                 else:
                     page.views.append(views["/login"](page))
-    
+
             page.update()
         except Exception as e:
             print(f"ROUTE CHANGE EXCEPTION: {str(e)}", flush=True)

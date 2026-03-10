@@ -24,9 +24,7 @@ def view_admin(page: ft.Page) -> ft.View:
 
     async def toggle_extension(ext_name, is_enabled):
         try:
-            await api.post(
-                "/client/guilds/0/config/toggle", data={"extension_name": ext_name, "enabled": is_enabled}
-            )
+            await api.post("/client/guilds/0/config/toggle", data={"extension_name": ext_name, "enabled": is_enabled})
             # Reload
             await fetch_config()
         except Exception as e:
@@ -42,20 +40,20 @@ def view_admin(page: ft.Page) -> ft.View:
         try:
             resp = await api.get("/client/guilds/0/config")
             config = resp.get("config", [])
-    
+
             extensions_column.controls.clear()
-    
+
             for ext in config:
                 name = ext["name"]
                 is_enabled = ext["is_enabled"]
                 gadgets = ", ".join(ext["gadgets"])
-    
+
                 # We need a closure to capture the loop variables correctly
                 def make_toggle(ext_name):
                     return lambda e: asyncio.create_task(toggle_extension(ext_name, e.control.value))
-    
+
                 switch = ft.Switch(value=is_enabled, on_change=make_toggle(name), active_color=ft.Colors.PRIMARY)
-    
+
                 card = ft.Card(
                     content=ft.Container(
                         content=ft.Row(
@@ -75,7 +73,7 @@ def view_admin(page: ft.Page) -> ft.View:
                     )
                 )
                 extensions_column.controls.append(card)
-    
+
         except Exception as e:
             error_text.value = f"Failed to load global config: {str(e)}"
             error_text.visible = True

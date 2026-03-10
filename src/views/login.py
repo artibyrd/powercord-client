@@ -27,7 +27,6 @@ def view_login(page: ft.Page) -> ft.View:
     progress_ring = ft.ProgressRing(visible=False, width=20, height=20)
 
     # Pre-fill if we have existing storage (this works in sync via page.client_storage but we might need a blank default if we can't await it here)
-    saved_url = ""
 
     async def on_connect_click(e):
         url = server_url_field.value.strip()
@@ -60,8 +59,9 @@ def view_login(page: ft.Page) -> ft.View:
             # If we get here, connection didn't immediately fail.
             # Store credentials securely (suppressing deprecation warnings internally)
             import warnings
+
             with warnings.catch_warnings():
-                warnings.simplefilter('ignore')
+                warnings.simplefilter("ignore")
                 await page.shared_preferences.set("base_url", url)
                 await page.shared_preferences.set("api_key", key)
 

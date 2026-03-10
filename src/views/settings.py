@@ -8,8 +8,9 @@ def view_settings(page: ft.Page) -> ft.View:
 
     async def logout_click(e):
         import warnings
+
         with warnings.catch_warnings():
-            warnings.simplefilter('ignore')
+            warnings.simplefilter("ignore")
             await page.shared_preferences.remove("api_key")
             await page.shared_preferences.remove("base_url")
         api.close()
@@ -27,8 +28,9 @@ def view_settings(page: ft.Page) -> ft.View:
     )
 
     import warnings
+
     with warnings.catch_warnings():
-        warnings.simplefilter('ignore')
+        warnings.simplefilter("ignore")
         # We can't await this synchronously here, so we will initialize a blank connected server state
         # A more robust fix will load this async via on_load event
         url = "Connected System"

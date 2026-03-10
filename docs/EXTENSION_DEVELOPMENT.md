@@ -4,20 +4,54 @@ Powercord is designed to be highly modular. Just as the backend supports adding 
 
 This is especially helpful for complex functionalities like bulk-uploading MIDI files, managing files, viewing real-time graphs, or executing specialized tools that exceed simple Web browser capabilities.
 
-## The Plugin Ecosystem
+## Extension Architecture
 
-All client plugins reside in the `src/plugins/` directory.
+All client extensions reside in the `src/extensions/` directory.
 
-To create a new extension:
-1. Create a new folder inside `src/plugins/` (e.g., `my_extension`).
-2. Create a file named `client_ext.py` inside that folder.
+An extension requires two core files:
+1. `extension.json` - A manifest declaring the extension name, version, and pip dependencies.
+2. `client_ext.py` - The main python entry point containing your Flet code.
+
+Below is the required folder structure of an extension repository:
 
 ```text
-src/
-└── plugins/
-    └── my_extension/
-        └── client_ext.py
+my_extension/
+├── extension.json
+├── __init__.py
+└── client_ext.py
 ```
+
+### The Extension Manifest
+
+Your `extension.json` file is required for the installation manager to process your extension.
+
+```json
+{
+    "name": "my_extension",
+    "version": "1.0.0",
+    "description": "A custom Flet tool",
+    "python_dependencies": ["pandas>=2.0"]
+}
+```
+
+### Installing and Uninstalling
+
+Client extensions are managed using the Powercord Client's Justfile CLI.
+
+**To install an extension from a local directory:**
+```bash
+just ext-install /path/to/my_extension
+```
+This command will copy the extension files into the `src/extensions/` directory and automatically execute `poetry add` to install any packages defined in `python_dependencies`.
+
+**Graceful Reinstalls for Development:**
+During development, you can repeatedly run `just ext-install /path/to/my_extension` to overwrite your installed extension with your newest code. The CLI will safely wipe the existing destination and intelligently check the manifests. If your `python_dependencies` haven't changed, it will completely skip the lengthy `poetry add` resolution step, deploying your updates instantly.
+
+**To uninstall an extension:**
+```bash
+just ext-uninstall my_extension
+```
+This command safely removes the extension from `src/extensions/` and automatically strips away any unique `python_dependencies` using `poetry remove`.
 
 ## Creating `ClientExtension`
 

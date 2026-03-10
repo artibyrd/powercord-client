@@ -11,6 +11,8 @@ dependencies = [
     "pydantic (>=2.12.5,<3.0.0)",
 ]
 
+[tool.poetry]
+package-mode = false
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

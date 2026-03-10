@@ -28,7 +28,7 @@ def view_dashboard(page: ft.Page, ext_manager) -> ft.View:
     loading_indicator = ft.ProgressRing(visible=True)
     error_text = ft.Text(color=ft.Colors.ERROR, visible=False)
 
-    plugins_grid = ft.GridView(
+    extensions_grid = ft.GridView(
         expand=1,
         runs_count=8,
         max_extent=200,
@@ -46,6 +46,7 @@ def view_dashboard(page: ft.Page, ext_manager) -> ft.View:
         def go_to_ext_route(route):
             async def handler(e):
                 await page.push_route(route)
+
             return handler
 
         # Try to find the first route of this extension
@@ -53,7 +54,7 @@ def view_dashboard(page: ft.Page, ext_manager) -> ft.View:
         ext_routes = list(ext.get_routes().keys())
         main_route = ext_routes[0] if ext_routes else "/"
 
-        plugin_card = ft.Card(
+        extension_card = ft.Card(
             content=ft.Container(
                 content=ft.Column(
                     [
@@ -70,11 +71,12 @@ def view_dashboard(page: ft.Page, ext_manager) -> ft.View:
             ),
             elevation=2,
         )
-        plugins_grid.controls.append(plugin_card)
+        extensions_grid.controls.append(extension_card)
 
     def go_to_server(guild_id):
         async def handler(e):
             await page.push_route(f"/server/{guild_id}")
+
         return handler
 
     def on_load():
@@ -90,6 +92,7 @@ def view_dashboard(page: ft.Page, ext_manager) -> ft.View:
             is_admin = resp.get("is_global_admin", False)
 
             if is_admin:
+
                 async def go_admin(e):
                     await page.push_route("/admin")
 
@@ -169,9 +172,9 @@ def view_dashboard(page: ft.Page, ext_manager) -> ft.View:
                         grid,
                         ft.Divider(),
                         ft.Text("Installed Plugins", size=20, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.LEFT),
-                        plugins_grid
-                        if plugins_grid.controls
-                        else ft.Text("No client plugins installed.", color=ft.Colors.ON_SURFACE_VARIANT),
+                        extensions_grid
+                        if extensions_grid.controls
+                        else ft.Text("No client extensions installed.", color=ft.Colors.ON_SURFACE_VARIANT),
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.STRETCH,
                 ),
