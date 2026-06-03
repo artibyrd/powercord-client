@@ -9,8 +9,8 @@ This is especially helpful for complex functionalities like bulk-uploading MIDI 
 All client extensions reside in the `src/extensions/` directory.
 
 An extension requires two core files:
-1. `extension.json` - A manifest declaring the extension name, version, and pip dependencies.
-2. `client_ext.py` - The main python entry point containing your Flet code.
+1. `extension.json` - A manifest declaring the extension name, version, and pip dependencies. Required by the `just ext-install` CLI workflow.
+2. `client_ext.py` - The main python entry point containing your Flet code. This is the only file required for runtime loading by the `ClientExtensionManager`.
 
 Below is the required folder structure of an extension repository:
 
@@ -88,7 +88,7 @@ class MyCustomExtension(ClientExtension):
         page.title = self.display_name
 
         def go_back(e):
-            page.go("/")
+            page.push_route("/")
 
         app_bar = ft.AppBar(
             leading=ft.IconButton(ft.Icons.ARROW_BACK, on_click=go_back),
@@ -120,4 +120,4 @@ You can use this to make authenticated network calls to the backend.
             print(f"Error: {e}")
 ```
 
-The api methods natively handle JSON serialization, `Bearer` token injection, and error raising for `4xx` and `5xx` responses.
+The api methods handle `Bearer` token injection and automatic error raising for non-2xx responses. Pass request bodies via `json=` keyword argument as with standard httpx.

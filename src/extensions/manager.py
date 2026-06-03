@@ -91,7 +91,7 @@ class ClientExtensionManager:
 
 
 _POETRY_CMD = shutil.which("poetry") or "poetry"
-# Default path relative to this file
+# CLI's extensions directory — same directory that contains this module
 _EXTENSIONS_DIR = Path(__file__).resolve().parents[1] / "extensions"
 
 

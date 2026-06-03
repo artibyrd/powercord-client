@@ -43,10 +43,9 @@ just qa
 
 ## Architecture
 
-- `src/app.py`: The main Flet entry point and routing manager.
-- `src/api_client.py`: An HTTPX wrapper that manages authentication and connects to the Powercord internal network.
+- `src/app.py`: The main Flet entry point. Initializes extensions, builds the route table, handles auth guards, and manages view lifecycle.
+- `src/api_client.py`: An HTTPX wrapper that manages authentication and communicates with the Powercord server API.
 - `src/views/`: Individual Flet Views (e.g., `/dashboard`, `/login`, `/server/:id`).
-- `src/components/`: Reusable Flet Controls (e.g., custom buttons, headers, navigation).
 - `src/extensions/manager.py`: The dynamic plugin loader that identifies and mounts local client extensions.
 - `src/extensions/`: The core directory where Flet extensions reside.
 

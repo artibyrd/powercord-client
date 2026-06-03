@@ -13,7 +13,7 @@ def view_settings(page: ft.Page) -> ft.View:
             warnings.simplefilter("ignore")
             await page.shared_preferences.remove("api_key")
             await page.shared_preferences.remove("base_url")
-        api.close()
+        await api.close()
         # Reset config
         api.configure("", "")
         await page.push_route("/login")

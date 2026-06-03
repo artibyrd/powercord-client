@@ -26,7 +26,7 @@ def view_login(page: ft.Page) -> ft.View:
     error_text = ft.Text(color=ft.Colors.ERROR, visible=False)
     progress_ring = ft.ProgressRing(visible=False, width=20, height=20)
 
-    # Pre-fill if we have existing storage (this works in sync via page.client_storage but we might need a blank default if we can't await it here)
+    # Pre-fill if we have existing storage (this works in sync via page.shared_preferences but we might need a blank default if we can't await it here)
 
     async def on_connect_click(e):
         url = server_url_field.value.strip()
