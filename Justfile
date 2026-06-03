@@ -1,5 +1,5 @@
 # use with https://just.systems
-set shell := ["cmd.exe", "/c"]
+set shell := ["bash", "-cu"]
 set export
 
 # Default target
@@ -17,8 +17,8 @@ install:
 [group: "dev"]
 dev-clean:
     @echo "Cleaning up..."
-    for /d /r . %d in (__pycache__ .pytest_cache .mypy_cache) do @if exist "%d" rd /s /q "%d"
-    @if exist ".venv" rd /s /q ".venv"
+    find . -type d \( -name __pycache__ -o -name .pytest_cache -o -name .mypy_cache \) -exec rm -rf {} +
+    [ -d .venv ] && rm -rf .venv || true
     @echo "Cleanup complete!"
 
 # Run the Flet client locally in development mode (hot reload)
@@ -26,41 +26,38 @@ dev-clean:
 run:
     poetry run flet run src/app.py -d
 
-# Quality Assurance. Usage: just qa [fix] (pass "fix" to auto-fix lint and format issues)
+# Quality Assurance. Usage: just qa [--fix]
 [group: "qa"]
-qa fix="": (lint fix) (format fix) check test
+[arg("fix", long, value="true")]
+qa fix="false": (lint fix) (format fix) check test
 
-# Linting. Usage: just lint [fix] (pass "fix" to auto-fix issues)
+# Linting. Usage: just lint [--fix] (auto-fix issues)
 [group: "qa"]
-lint fix="":
-    @if "{{fix}}" == "fix" ( \
-        poetry run ruff check . --fix \
-    ) else ( \
-        poetry run ruff check . \
-    )
+[arg("fix", long, value="true")]
+lint fix="false":
+    poetry run ruff check . {{ if fix == "true" { "--fix" } else { "" } }}
 
-# Formatting. Usage: just format [fix] (pass "fix" to apply formatting, otherwise check-only)
+# Formatting. Usage: just format [--fix] (apply formatting, otherwise check-only)
 [group: "qa"]
-format fix="":
-    @if "{{fix}}" == "fix" ( \
-        poetry run ruff format . \
-    ) else ( \
-        poetry run ruff format . --check \
-    )
+[arg("fix", long, value="true")]
+format fix="false":
+    poetry run ruff format . {{ if fix == "false" { "--check" } else { "" } }}
 
 # Type Checking
 [group: "qa"]
 check:
     poetry run mypy .
 
-# Run tests. Usage: just test [type] (type: unit, integration, or empty for all)
+# Run tests. Usage: just test [--type unit|integration]
 [group: "qa"]
+[arg("type", long)]
 test type="":
-    @if "{{type}}" == "" ( \
-        poetry run pytest tests src/extensions \
-    ) else ( \
-        poetry run pytest tests src/extensions -m {{type}} \
-    )
+    #!/usr/bin/env bash
+    if [ "{{type}}" = "" ]; then
+      poetry run pytest tests src/extensions
+    else
+      poetry run pytest tests src/extensions -m "{{type}}"
+    fi
 
 # Run tests and generate coverage report
 [group: "qa"]
@@ -80,8 +77,7 @@ build target="windows":
 # Clean build artifacts
 [group: "build"]
 clean:
-    @if exist "build" rd /s /q "build"
-    @if exist "dist" rd /s /q "dist"
+    rm -rf build dist
 
 # Install a Flet Client extension from a local path. Usage: just ext-install <source_path>
 [group: "extensions"]
