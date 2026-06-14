@@ -54,3 +54,7 @@ htmlcov/
 
 # Extensions
 src/extensions/*/
+
+# Agent Rules & Workflows
+.cursorrules
+.agent
