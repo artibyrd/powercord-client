@@ -1,6 +1,6 @@
 [project]
 name = "powercord-client"
-version = "0.1.0"
+version = "1.0.0"
 description = "Flet companion client for the Powercord framework"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 readme = "README.md"
