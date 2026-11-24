@@ -37,6 +37,8 @@ assets/
 *.app
 
 # IDEs and Editors
+.gemini/
+.cursor/
 .idea/
 .vscode/
 *.swp
