@@ -10,3 +10,4 @@ This repository houses the companion desktop application built with Flet and HTT
 2. **HTTP API Communication**: Communicate with the Powercord backend exclusively via the HTTP client abstraction (`httpx.AsyncClient`).
 3. **No Server Module Imports**: Never import server modules (`app.*`, `nextcord`, `fasthtml`, `sqlmodel`) into client views.
 4. **Pre-Commit Checks**: Always run `poetry run ruff check --fix . && poetry run ruff format .` and `poetry run pytest` before submitting changes for human review.
+5. **Skill Overlays**: Check umbrella workspace root `.agents/overrides/<skill>.md` (or `powercord/.agents/overrides/<skill>.md`) for Powercord-specific rules when applying generalized skills.
